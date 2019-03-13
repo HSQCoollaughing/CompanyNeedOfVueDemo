@@ -1,698 +1,1010 @@
->Created By **JishuBao** on **2019-03-06 12:38:22**  
->Recently revised in **2019-03-08 12:38:22**
+>Created By **JishuBao** on **2019-03-11 12:38:22**  
+>Recently revised in **2019-03-13 12:38:22**
 
 &nbsp;
 
-　　**欢迎大家来到技术宝的掘金世界,您的star是我写文章最大的动力！[GitHub地址](https://github.com/WJB3/Webpack4OfVueStage)**
+　　**欢迎大家来到技术宝的掘金世界,您的star是我写文章最大的动力！[GitHub地址](https://github.com/WJB3/CompanyNeedOfVueDemo)**
 　　
 &nbsp;
-
-　　**开篇点题:**
-　　<br />
-　　这是一篇使用webpack4搭建vue/react环境的文章，会详细的介绍每个插件的作用等...
+<br />
+　　这是一篇使用vue+vant+vuex+vue-router实现公司需求的文章，会详细的介绍每个插件的作用等...
 　　<br />
 　  　感觉不错的小伙伴，点赞star走一波;
 　  <br />
 　  　感觉文章有误的小伙伴，评论区、[QQ群](http://qm.qq.com/cgi-bin/qm/qr?k=BhM60jsO8NjCWBAVkUKJmAcjTy6iJLyY)走一波；
 　  <br />
 　  　虚心求教，不胜感激~
-　  
-# 一、Webpack概述
-&emsp;**webpack是模块化管理工具，使用webpack可以对模块进行压缩、预处理、按需打包、按需加载等。**
 
-# 二、webpack基本概念
-&emsp;**在深入了解webpack之前我们先来了解几个相关概念(知道大家懒得看，就粗略的介绍下)：**
-<br />
-+ <font color=#A52A2A size=3 >Entry</font>:入口，Webpack执行构建的第一步将从Entry开始，可抽象成输入。
-+ <font color=#A52A2A size=3>Module</font>:模块，在Webpack里一切皆模块，一个模块对应着一个文件。webpack会从配置的Entry开始递归找出所有依赖的模块。
-+ <font color=#A52A2A size=3>Chunk</font>:代码块，一个Chunk由多个模块组合而成，用于代码合并与切割。
-+ <font color=#A52A2A size=3>Loader</font>:模块转换器，用于把模块原内容按照需求转换成新内容。
-+ <font color=#A52A2A size=3>Plugin</font>:扩展插件,在Webpack构建流程中的特定时机会广播出对应的时间，插件可以监听这些事件的发生,在特定时机做对应的事情。
+开篇题外话：
 
-# 三、webpack实操(小白入门级别)
-&emsp;**肯定有小伙伴们百度过其他的文章，也肯定遇到过只夸夸而谈而不实际操作的博主，或者一些博主只是粗略的一笔带过，导致大家啥也没有收获，越看越迷糊，本文与那些不负责任的博主是不一样的(开个玩笑)，本文真刀真枪，实际操作，带小伙伴从零开始手动搭建一个webpack的开发环境，精细到新建文件夹级别(手动滑稽)，争取每一行代码大家看的见、理解的透彻！！**
-## 新建个文件夹
-&emsp;**首先新建一个文件夹，技术宝喜欢在E盘的MyProject目录下新建文件夹，取名叫做WebpackofVueStage，如下图所示：
-![](https://user-gold-cdn.xitu.io/2019/3/6/16951a5d82288074?w=1087&h=675&f=png&s=70476)**
+&emsp;由于技术宝刚到公司，人生地不熟，正式项目还没有启动，暂时负责修改样式，解决同事遇到的技术小bug...，但是今天我接到了我的直接领导给我安排的任务，心情异常激动，说是让准备以下几个功能：
 
-## 用编辑器打开文件夹
-&emsp;**使用编辑器打开文件夹，我在这里使用的是VSCODE,这是微软推出的一款编辑器，非常好用，建议小伙伴们都可以来试试看哦~，如下图所示：**
+**开篇点题:**
+　　
 
-![](https://user-gold-cdn.xitu.io/2019/3/6/16951b06008d2167?w=1528&h=943&f=png&s=175108)
+&emsp;**1.换肤**
 
-## 在vscode终端中打开这个文件夹，即在这个文件夹下打开所在命令行，输入```npm init```，会生成一个```package.json```文件
+&emsp;**2.动效**
 
-![](https://user-gold-cdn.xitu.io/2019/3/6/16951b9b7aa85466?w=1528&h=943&f=png&s=187672)
+&emsp;**3.div换位置(动态换)(手动换)**
 
-## 内容如下
+&emsp;今天就来带领大家来跟技术宝一起来学习下这些内容！
 
-![](https://user-gold-cdn.xitu.io/2019/3/6/16951bb84d15ce31?w=613&h=270&f=png&s=24266)
+# 一、项目搭建
+&emsp;首先开始页面的开发，了解前端的人都知道，没有项目怎么开始写页面呢？所以我们接下来的任务就是搭建项目！首先将上次我们用webpack4搭建的Vue项目搭建起来，这里我给大家准备了**Github地址[Webpack4OfVue](https://github.com/WJB3/Webpack4OfVueStage)**,大家记得给我点个star哦，不胜感激！
 
-# 四、在目录下新建文件
-&emsp;**在主目录下新建build目录存放webpack相关配置文件、src目录存放源码目录包括资源文件、js、css文件等...,目录结构入下图所示，文件均为空，技术宝将带着大家一行行代码实现这"宏伟"的项目。**
+## 1.下载项目
+&emsp;和使用Npm一样，我们首先确保自己电脑上安装了**node**,确定可以执行git相关的命令，首先**git clone**项目到本地，如下图：
 
-![](https://user-gold-cdn.xitu.io/2019/3/6/16951c3b8c86c1ea?w=294&h=413&f=png&s=30393)
+![](https://user-gold-cdn.xitu.io/2019/3/11/1696aa624215d437?w=653&h=218&f=png&s=23952)
 
-# 五、磨刀霍霍敲起来
-
-**webpack相关文件的代码编写：此处将webpack文件分为三个文件**
-
-## 1.webpack.base.conf.js(基础代码的编写)
+## 2.跑起来
+&emsp;和正常的vue/react项目一样，在文件下执行 **yarn install/npm install && yarn start/npm start** 运行项目并打开[http://localhost:10000](http://localhost:10000)即可看到
 ```js
-const path=require('path');
-//利用require导入了node中path模块,path模块了一些处理文件路径的小工具，由于webpack是基于Node环境下的工具，所以可以直接使用node原生模块path
+$ yarn install
+yarn install v1.7.0
+info No lockfile found.
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+info fsevents@1.2.7: The platform "win32" is incompatible with this module.
+info "fsevents@1.2.7" is an optional dependency and failed compatibility check. Excluding it from installation.
+[3/4] Linking dependencies...
+warning " > less-loader@4.1.0" has unmet peer dependency "less@^2.3.1 || ^3.0.0".
+[4/4] Building fresh packages...
+success Saved lockfile.
+Done in 123.95s.
+```
+```js
+$ yarn start
+yarn run v1.7.0
+$ cross-env webpack-dev-server --config build/webpack.dev.conf.js
+ 98% after emitting DONE  Compiled successfully in 3639ms10:43:15
+
+ I  You application is running here http://localhost:10000
+
+ N  Some additionnal notes to be displayed unpon successful compilation
 ```
 
-```js 
-const SRC_PATH=path.resolve(__dirname,"../src")
-//path.resolve()方法可以将路径或者路径片段解析成绝对路径，具体可以结合官方文档进行查看,综合来看，path.resolve()是一个修改和整合文件路径的方法，dirname是directory+name的缩写，故名思义，是文件名的意思。总的来说就是将绝对路径提取出来
+![](https://user-gold-cdn.xitu.io/2019/3/11/1696aad29bd7e0b4?w=1315&h=848&f=png&s=85002)
+
+## 3.安装demo所需依赖
+&emsp;由于此次demo的开发需要依赖于**Vant+Vuex+Vue-router+less**,所以我们要安装所需的依赖！
+
+&emsp;执行命令：
+```js
+yarn add vuex vue-router vant
+```
+&emsp;安装所需依赖完毕！
+```js
+yarn add v1.7.0
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+info fsevents@1.2.7: The platform "win32" is incompatible with this module.
+info "fsevents@1.2.7" is an optional dependency and failed compatibility check. Excluding it from installation.
+[3/4] Linking dependencies...
+warning " > less-loader@4.1.0" has unmet peer dependency "less@^2.3.1 || ^3.0.0".
+[4/4] Building fresh packages...
+
+success Saved lockfile.
+warning Your current version of Yarn is out of date. The latest version is "1.13.0", while you're on "1.7.0".
+info To upgrade, run the following command:
+$ curl --compressed -o- -L https://yarnpkg.com/install.sh | bash
+success Saved 7 new dependencies.
+info Direct dependencies
+├─ vant@1.5.9
+├─ vue-router@3.0.2
+└─ vuex@3.1.0
+info All dependencies
+├─ @babel/runtime@7.3.4
+├─ @vant/icons@1.0.8
+├─ @vue/babel-helper-vue-jsx-merge-props@1.0.0-beta.2
+├─ vant@1.5.9
+├─ vue-lazyload@1.2.3
+├─ vue-router@3.0.2
+└─ vuex@3.1.0
+Done in 24.50s.
 ```
 
+
+# 二、项目页面编写
+&emsp;在上一节中我们搭建好了基本的开发环境，接下来就带大家编写基本的页面，由于样式不在此篇文章的考虑范围之内，所以我们直接采用**vant的ui**框架进行页面的搭建！
+## 1.新建模糊页面login、home、secord
+&emsp;本文是移动端的一个编写，所以我们采用**有赞的vant**来编写项目，在src文件夹下新建一个views文件夹，再在views文件夹下新建几个基本页面内容如下：
 ```js
-entry:{
-    main:'./src/index.js'
+<template>
+    <div class="container">login</div>
+</template>
+
+<script>
+export default{
+    
 }
-//入口起点(entry point)指示 webpack 应该使用哪个模块，来作为构建其内部依赖图的开始。进入入口起点后，webpack 会找出有哪些模块和库是入口起点（直接和间接）依赖的
-```
+</script>
 
-&emsp;**本文以vue为例，首先安装需要安装的依赖包**
-```js 
-npm install vue -S
-//-S即-save的缩写，包会写入dependencies，-D或者--save-d会写入devDepencies中
-```
-```js 
-npm install webpack webpack-cli webpack-dev-server webpack-merge --save-dev
-//webpack-cli是 webpack 的命令行工具。让我们可以不用写打包脚本，只需配置打包配置文件，然后在命令行输入 webpack-cli --config webpack.config.js 来使用 webpack, 简单很多。webpack 4 之前命令行工具是集成在 webpack 包中的，4.0 开始 webpack 包本身不再集成 cli。webpack-dev-server用于开发调试，它提供了web服务、热更新、接口代理等支持。webpack-merge提供了一个merge连接数组并合并创建新对象的对象的函数。如果遇到函数，它将执行它们，通过算法运行结果，然后再次将返回的值包装在函数中。
-```
-
-```js
-resolve:{
-        extensions:['.vue','.js'],
-        alias:{
-            '@':SRC_PATH
-        }
-},
-//Resolve 配置 Webpack 如何寻找模块所对应的文件,extensions:在导入语句没带文件后缀时，Webpack 会自动带上后缀后去尝试访问文件是否存在。alias: 配置项通过别名来把原导入路径映射成一个新的导入路径。 
-```
-```js
-module:{
-        rules:[
-            {
-                test:/\.vue$/,//通过loader来预处理文件 允许你打包除了js之外的任何静态资源
-                use:'vue-loader'
-            },
-            {
-                test:/\.js?$/,
-                use:'babel-loader',
-                //排除node_modules目录下的文件
-                exclude:/node_modules/,
-                include:SRC_PATH
-            },
-            {
-                test:/\.(woff|svg|eot|woff2|tff)$/,
-                use:[
-                    {
-                        loader:'url-loader',
-                        include: [resolve('src')],
-                        options:{
-                            limit:10000
-                        }
-                    }
-                ],
-                exclude:/node_modules/,
-            }
-        ]
-    },
-```
-**如上：需要安装图示对应的loader**
-```js
- npm install vue-loader babel-loader url-loader --save-dev
-//rules是module的属性，指定模块解析规则，而use是每一个rule的属性，指定要用什么loader。vue-loader：解析和转换 .vue 文件，提取出其中的逻辑代码 script、样式代码 style、以及 HTML 模版 template，再分别把它们交给对应的 Loader 去处理。babel-loader用于将ES6转化为ES5等功能。url-loader他可以将html以及css中的图片打包成base64，但是js中如果有图片url并不能编译成功。用于减少http请求实现性能优化。
-```
-
-## 当使用vue-loader时，请确保您已经引入vue的插件
-```js 
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
-plugins:[
-        new VueLoaderPlugin(),
-        //它的职责是将你定义过的其它规则复制并应用到 .vue 文件里相应语言的块。例如，如果你有一条匹配 /\.js$/ 的规则，那么它会应用到 .vue 文件里的 <script> 块。
-]
-```
-### 至此基础webpack文件已经搭建好，以下是webpack.base.conf.js的完整代码：
-```
-const path=require('path');
-//path是node.js的一个模块，提供了一些用于处理文件路劲的小工具
-const SRC_PATH=path.resolve(__dirname,"../src");
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
-
-module.exports={
-    entry:{
-        main:"./src/index.js"//入口起点(entry point)指示 webpack 应该使用哪个模块，来作为构建其内部依赖图的开始。进入入口起点后，webpack 会找出有哪些模块和库是入口起点（直接和间接）依赖的
-    },
-    resolve:{
-        extensions:['.vue','.js'],
-        alias:{
-            '@':SRC_PATH
-        }
-    },
-    module:{
-        rules:[
-            {
-                test:/\.vue$/,//通过loader来预处理文件 允许你打包除了js之外的任何静态资源
-                use:'vue-loader'
-            },
-            {
-                test:/\.js$/,
-                use:'babel-loader',
-                //排除node_modules目录下的文件
-                exclude:/node_modules/,
-                include:SRC_PATH
-            },
-            {
-                test:/\.(woff|svg|eot|woff2|tff)$/,
-                use:[
-                    {
-                        loader:'url-loader',
-                        options:{
-                            limit:10000
-                        }
-                    }
-                ],
-                exclude:/node_modules/,
-            }
-        ]
-    },
-    plugins:[
-        new VueLoaderPlugin(),
-        //它的职责是将你定义过的其它规则复制并应用到 .vue 文件里相应语言的块。例如，如果你有一条匹配 /\.js$/ 的规则，那么它会应用到 .vue 文件里的 <script> 块。
-    ]
-
+<style>
+.container{
+    background-color:skyblue;
+    font-size:20px;
 }
-```
-## 2.webpack.dev.conf.js的编写(开发环境)
-```js
-const webpack=require('webpack');
-//require工作原理:首先确定是否是一个原生的模块,如果不是就进入node_modules查找,再看是否在package.json的main里面定义。
+</style>
+//login.vue文件内容
 ```
 ```js
-const merge=require('webpack-merge');
-//webpack-merge提供了一个merge连接数组并合并创建新对象的函数。
-```
-```js
-const baseWebpackConfig=require('./webpack.base.conf.js');
-//引入基础webpack设置。
-```
-```js
-const HtmlWebpackPlugin=require('html-webpack-plugin');
-//这是一个webpack插件，可以简化HTML文件的创建，为您的webpack捆绑服务提供服务。这对于webpack在文件名中包含哈希的包很有用，这些哈希值会更改每个编译。基本作用就是生成HTML。
-```
-```js
-const derServerPort=10000;
-//开发环境的端口号。
-```
-```js
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
-//识别某些类别的webpack错误，并清理，聚合和优先级，以提供更好的开发人员体验。(友好的提示插件)。
-```
-```js
-npm install friendly-errors-webpack-plugin html-webpack-plugin --save-dev
-//安装上述代码所需要的依赖
-```
-```js
-mode:'development'
-//开发环境,会将 process.env.NODE_ENV 的值设为 development。启用 NamedChunksPlugin 和 NamedModulesPlugin
-```
-```js
-devtool:'cheap-module-eval-source-map'
-//不带列映射(column-map)的 SourceMap，将加载的 Source Map 简化为每行单独映射。.
-```
-```js
-module:{
-        rules:[
-            {
-                test:/\.css$/,
-                use:[
-                    {loader:"style-loader"},
-                    {loader:"css-loader"},
-                    {loader:"postcss-loader"}
-                ]
-            },
-            {
-                test:/\.(sc|sa)ss$/,
-                use:[
-                    {loader:"style-loader"},
-                    {loader:"css-loader"},
-                    {loader:"sass-loader"},
-                    {loader:"postcss-loader"}
-                ]
-            },
-            {
-                test:/\.less$/,
-                use:[
-                    {loader:"style-loader"},
-                    {loader:"css-loader"},
-                    {loader:"less-loader"},
-                    {loader:"postcss-loader"}
-                ]
-            },
-            {
-                test:/\.(png|svg|jpg|gif)$/,
-                use:[
-                    {
-                        loader:'file-loader',
-                        options:{
-                            limit:10000,
-                        }
-                    }
-                ]
-            }
-        ]
-    },
-//直接来说是把对应后缀名转化为css文件
-```
-```js
-npm install style-loader css-loader sass-loader less-loader postcss-loader file-loader --save-dev
-//使用style-loader通过注入<style>标记将CSS添加到DOM。css-loader 解释(interpret) @import 和 url() ，会 import/require() 后再解析(resolve)它们。sass-loader:将 Sass 编译成 CSS。less-loader:将less转化为css。postcss-loadercss3属性已经给加上了浏览器前缀,file-loader与file-loader类似。
-```
-```
-devServer:{
-        port:derServerPort,//指定要监听请求的端口号
-        overlay:{//当编译器存在错误或警告时,将浏览器显示全屏覆盖
-            warnings:false,
-            errors:true,
-        },
-        host:"localhost",
-        open:true,//开发服务器将打开浏览器
-        noInfo:true,//那些显示的 webpack 包(bundle)信息」的消息将被隐藏。错误和警告仍然会显示。
-        https:false,
-        hot:true,//启用webpack的模块热更新
-        compress:true,//一切服务都启用gzip压缩
-        progress:true,//将任务进度输出到控制台
-        quiet:true,
-        useLocalIp:false,//此选项允许浏览器使用你的本地ip打开
-        proxy:{//代理服务器
-            "/api":{
-                target:"http://localhost:8080",
-                changeOrigin:true,
-                pathRewrite:{"^api":"/api"}
-            }
-        }
-    },
-    //以上为webpack开发模式下的代码片段
-```
-```js
-plugins:[
-        //处理html
-        new HtmlWebpackPlugin({
-            template:'src/public/index.html',//开发环境需要路径
-            inject:'body',//所有javascript资源将被放置在body元素的底部
-            minify:{
-                html5:true,
-                collapseWhitespace: true, //把生成的 index.html 文件的内容的没用空格去掉，减少空间
-            },
-            title:'基于vue的webpack4教手架项目 准备在项目中采用vue-router、vuex、vant等技术(development开发环境)',
-            hash:true,
-            favicon:'src/assets/favicon-shield.ico',//将给定的favicon路径添加到输出HTML
-            showErrors:true,
-        }),
-        //热更新
-        new webpack.HotModuleReplacementPlugin(),
-        new FriendlyErrorsWebpackPlugin({
-            compilationSuccessInfo: {
-                messages: [`You application is running here http://localhost:${derServerPort}`],
-                notes: ['Some additionnal notes to be displayed unpon successful compilation']
-            },
-            onErrors: function (severity, errors) {},
-            clearConsole: true,
-            additionalFormatters: [],
-            additionalTransformers: []
-        }),
-        new webpack.LoaderOptionsPlugin({
-            options:{
-            }
-        })
-    ]
-    //开发环境下的插件配置
-```
-### 至此开发环境下的webpack已搭好，webpack.dev.conf.js文件完整代码如下：
-```js
-const webpack=require('webpack');
-//require工作原理:首先确定是否是一个原生的模块,如果不是就进入node_modules查找,再看是否在package.json的main里面定义。
-const merge=require('webpack-merge');
-//webpack-merge提供了一个merge连接数组并合并创建新对象的函数
-const baseWebpackConfig=require('./webpack.base.conf.js');
-//引入基础webpack设置
-const HtmlWebpackPlugin=require('html-webpack-plugin');
-const derServerPort=10000;
-//基本作用就是生成html文件
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
-//友好的提示
+<template>
+    <div class="container">home</div>
+</template>
 
-module.exports=merge(baseWebpackConfig,{
-    mode:'development',//开发环境,会将 process.env.NODE_ENV 的值设为 development。启用 NamedChunksPlugin 和 NamedModulesPlugin
-    devtool:'cheap-module-eval-source-map',//不带列映射(column-map)的 SourceMap，将加载的 Source Map 简化为每行单独映射。
-    module:{
-        rules:[
-            {
-                test:/\.css$/,
-                use:[
-                    {loader:"style-loader"},
-                    {loader:"css-loader"},
-                    {loader:"postcss-loader"}
-                ]
-            },
-            {
-                test:/\.(sc|sa)ss$/,
-                use:[
-                    {loader:"style-loader"},
-                    {loader:"css-loader"},
-                    {loader:"sass-loader"},
-                    {loader:"postcss-loader"}
-                ]
-            },
-            {
-                test:/\.less$/,
-                use:[
-                    {loader:"style-loader"},
-                    {loader:"css-loader"},
-                    {loader:"less-loader"},
-                    {loader:"postcss-loader"}
-                ]
-            },
-            {
-                test:/\.(png|svg|jpg|gif)$/,
-                use:[
-                    {
-                        loader:'file-loader',
-                        options:{
-                            limit:10000,
-                        }
-                    }
-                ]
-            }
-        ]
-    },
-    devServer:{
-        port:derServerPort,//指定要监听请求的端口号
-        overlay:{//当编译器存在错误或警告时,将浏览器显示全屏覆盖
-            warnings:false,
-            errors:true,
-        },
-        host:"localhost",
-        open:true,//开发服务器将打开浏览器
-        noInfo:true,//那些显示的 webpack 包(bundle)信息」的消息将被隐藏。错误和警告仍然会显示。
-        https:false,
-        hot:true,//启用webpack的模块热更新
-        compress:true,//一切服务都启用gzip压缩
-        progress:true,//将任务进度输出到控制台
-        quiet:true,
-        useLocalIp:false,//此选项允许浏览器使用你的本地ip打开
-        proxy:{//代理服务器
-            "/api":{
-                target:"http://localhost:8080",
-                changeOrigin:true,
-                pathRewrite:{"^api":"/api"}
-            }
-        }
-    },
-    plugins:[
-        //处理html
-        new HtmlWebpackPlugin({
-            template:'src/public/index.html',//开发环境需要路径
-            inject:'body',//所有javascript资源将被放置在body元素的底部
-            minify:{
-                html5:true,
-                collapseWhitespace: true, //把生成的 index.html 文件的内容的没用空格去掉，减少空间
-            },
-            title:'基于vue的webpack4教手架项目 准备在项目中采用vue-router、vuex、vant等技术(development开发环境)',
-            hash:true,
-            favicon:'src/assets/favicon-shield.ico',//将给定的favicon路径添加到输出HTML
-            showErrors:true,
-        }),
-        //热更新
-        new webpack.HotModuleReplacementPlugin(),
-        new FriendlyErrorsWebpackPlugin({
-            compilationSuccessInfo: {
-                messages: [`You application is running here http://localhost:${derServerPort}`],
-                notes: ['Some additionnal notes to be displayed unpon successful compilation']
-            },
-            onErrors: function (severity, errors) {},
-            clearConsole: true,
-            additionalFormatters: [],
-            additionalTransformers: []
-        }),
-        new webpack.LoaderOptionsPlugin({
-            options:{
-                // postcss:[
-                //     require('postcss-plugin-px2rem')({
-                //         rootValue:75,
-                //         selectorBlackList:['html'],
-                //         mediaQuery:true,
-                //         propBlackList:['75px']
-                //     })
-                // ],
-            }
-        })
-    ]
-});
-```
+<script>
+export default{
+    
+}
+</script>
 
-## 3.webpack.prod.conf.js代码的编写(生产环境)
-**与上文中代码相同不再赘述**
-```js
-const path=require('path');
-const DIST_PATH=path.resolve(__dirname,"../dist");
-const CleanWebpackPlugin=require('clean-webpack-plugin');
-//打包之前清除文件
+<style>
+.container{
+    background-color:skyblue;
+    font-size:20px;
+}
+</style>
+//home.vue文件内容
 ```
 ```js
-const BundleAnalyzerPlugin=require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-//分析打包后的包体积大小等
-```
-```js
-const MiniCssExtractPlugin=require('mini-css-extract-plugin');
-//分离css
-```
-```js
- mode:"production"
- //会将 process.env.NODE_ENV 的值设为 production。启用 FlagDependencyUsagePlugin, FlagIncludedChunksPlugin, ModuleConcatenationPlugin, NoEmitOnErrorsPlugin, OccurrenceOrderPlugin, SideEffectsFlagPlugin 和 UglifyJsPlugin.
-```
-```js
-output:{
-        filename:"js/[name].[hash].js",
-        path:DIST_PATH
-},
-```
-```js
-module:{
-        rules:[
-            {
-                test:/\.css$/,
-                use:[
-                    MiniCssExtractPlugin.loader,
-                    {loader:'css-loader'},
-                    {loader:"postcss-loader"}
-                ]
-            },
-            {
-                test:/\.(sc|sa)ss$/,
-                use:[
-                    MiniCssExtractPlugin.loader,
-                    {loader:'css-loader'},
-                    {loader:"sass-loader"},
-                    {loader:"postcss-loader"}
-                ]
-            },
-            {
-                test:/\.less$/,
-                use:[
-                    MiniCssExtractPlugin.loader,
-                    {loader:'css-loader'},
-                    {loader:'less-loader'},
-                    {loader:"postcss-loader"}
-                ]
-            },
-            {
-                test:/\.(png|svg|jpg|gif)$/,
-                use:[
-                    {
-                        loader:'file-loader',
-                        options:{
-                            limit:10000,
-                            name:"[hash].[ext]",
-                            outputPath:"images/"
-                        }
-                    }
-                ]
-            }
-        ]
-    },
-    //与开发模式下基本相同,MiniCssExtraPlugin插件分离css文件
-```
-```js
-plugins:[
-        new CleanWebpackPlugin(['dist'],{root:path.resolve(__dirname,'../'),verbose:true}),//每次打包前清除dist
-        new HtmlWebpackPlugin({
-            //将目录下的index.html引进生成的dist中的index.html
-            template:'src/public/index.html',
-            title:'基于vue的webpack4教手架项目 准备在项目中采用vue-router、vuex、vant等技术(product生产环境)',
-            favicon:'src/assets/favicon-shield.ico',
-            minify:{
-                removeComments:true,
-                collapseWhitespace:true,
-                removeAttributeQuotes:true
-            },
-            
-        }),
-        new BundleAnalyzerPlugin({//打包分析
-            analyzerPort:10000,
-            openAnalyzer:true,
-        }),
-        new MiniCssExtractPlugin({//分离css
-            filename:"css/[name].[chunkhash:8].css",
-            chunkFilename:"css/[id].[hash]css"
-        })
-    ]
-```
+<template>
+    <div class="container">secord</div>
+</template>
 
-### 至此webpack生产环境已经搭建完成，完整代码如下：
-```js
-const merge=require('webpack-merge');
-const baseWebpackConfig=require('./webpack.base.conf.js');
-const webpack=require('webpack');
-const path=require('path');
-const DIST_PATH=path.resolve(__dirname,"../dist");
-//打包之前清除文件
-const CleanWebpackPlugin=require('clean-webpack-plugin');
-const HtmlWebpackPlugin=require('html-webpack-plugin');
-//打包的时候分析包大小等
-const BundleAnalyzerPlugin=require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-//分离css
-const MiniCssExtractPlugin=require('mini-css-extract-plugin');
+<script>
+export default{
+    
+}
+</script>
 
-module.exports=merge(baseWebpackConfig,{
-    mode:"production",//会将 process.env.NODE_ENV 的值设为 production。启用 FlagDependencyUsagePlugin, FlagIncludedChunksPlugin, ModuleConcatenationPlugin, NoEmitOnErrorsPlugin, OccurrenceOrderPlugin, SideEffectsFlagPlugin 和 UglifyJsPlugin.
-    devtool:'cheap-module-source-map',//不带列映射(column-map)的 SourceMap，将加载的 Source Map 简化为每行单独映射。
-    output:{
-        filename:"js/[name].[hash].js",
-        path:DIST_PATH
-    },
-    module:{
-        rules:[
-            {
-                test:/\.css$/,
-                use:[
-                    MiniCssExtractPlugin.loader,
-                    {loader:'css-loader'},
-                    {loader:"postcss-loader"}
-                ]
-            },
-            {
-                test:/\.(sc|sa)ss$/,
-                use:[
-                    MiniCssExtractPlugin.loader,
-                    {loader:'css-loader'},
-                    {loader:"sass-loader"},
-                    {loader:"postcss-loader"}
-                ]
-            },
-            {
-                test:/\.less$/,
-                use:[
-                    MiniCssExtractPlugin.loader,
-                    {loader:'css-loader'},
-                    {loader:'less-loader'},
-                    {loader:"postcss-loader"}
-                ]
-            },
-            {
-                test:/\.(png|svg|jpg|gif)$/,
-                use:[
-                    {
-                        loader:'file-loader',
-                        options:{
-                            limit:10000,
-                            name:"[hash].[ext]",
-                            outputPath:"images/"
-                        }
-                    }
-                ]
-            }
-        ]
-    },
-    plugins:[
-        new CleanWebpackPlugin(['dist'],{root:path.resolve(__dirname,'../'),verbose:true}),//每次打包前清除dist
-        new HtmlWebpackPlugin({
-            //将目录下的index.html引进生成的dist中的index.html
-            template:'src/public/index.html',
-            title:'基于vue的webpack4教手架项目 准备在项目中采用vue-router、vuex、vant等技术(product生产环境)',
-            favicon:'src/assets/favicon-shield.ico',
-            minify:{
-                removeComments:true,
-                collapseWhitespace:true,
-                removeAttributeQuotes:true
-            },
-            
-        }),
-        new BundleAnalyzerPlugin({//打包分析
-            analyzerPort:10000,
-            openAnalyzer:true,
-        }),
-        new MiniCssExtractPlugin({//分离css
-            filename:"css/[name].[chunkhash:8].css",
-            chunkFilename:"css/[id].[hash]css"
-        })
-    ]
-});
+<style>
+.container{
+    background-color:skyblue;
+    font-size:20px;
+}
+</style>
+//secord.vue内容
 ```
+**项目骨架如下图**
 
-## src相关文件的代码编写
-&emsp;**如上述，我们已经完成了与webpack相关的代码编写。接下来就是源码相关的编写了在上面敲的代码中我们会发现例如index.js、index.html等都未进行代码的编写，接下来我们就要完善这部分的代码。Are you ready?**
+![](https://user-gold-cdn.xitu.io/2019/3/11/1696ad50eb0ba2bb?w=215&h=756&f=png&s=37136)
 
-### 1.首先准备css图标图片favicon-shield.ico(ico后缀是图表图片格式),放入assets文件夹
+## 2.新建路由配置文件
 
-![](https://user-gold-cdn.xitu.io/2019/3/6/169526178d64fd6d?w=45&h=44&f=png&s=1586)
-
-### 2.index.html模板文件的编写，放入public文件夹下
-```js
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-        <title>
-            <%= htmlWebpackPlugin.options.title %>
-        </title>
-    </head>
-    <body>
-        <div id="root"></div>
-    </body>
-</html>
-```
-
-### 3.入口文件index.js的编写，放入src根目录下：
+&emsp;在src文件夹下新建router文件夹,文件夹下新建index.js文件当作路由配置文件
 ```js
 import Vue from 'vue';
-//在import Vue的过程中Vue主要是在原型上完成方法的挂载，并且初始化了全局的API。
-import App from './App.vue';//引入vue页面(稍候书写)
-import './styles/reset.css';//引入样式重置
+import VueRouter from 'vue-router';
 
-Vue.config.productionTip=false;//阻止启动生产消息，常用作指令
+import Home from './../views/home';
+import Secord from './../views/secord';
+import UserLogin from './../views/login';
+
+import globalStore from './../store/global';
+
+Vue.use(VueRouter);
+
+const router=new VueRouter({
+    routes:[
+        {
+            path:'/',
+            redirect:to=>{
+                if(localStorage.getItem('token') && globalStore.state.isAuthentication){
+                    return {path:'/home'}
+                }else{
+                    return {path:'/user/login'}
+                }
+            }//  /路径下如果持久化存储localStorage下有token并且global.js下的Authentication(是否登陆)为true/false,如果登陆跳转到Home页面，没有的话,就跳转到用户登陆页面。
+        },
+        {
+            path:'/user/login',
+            name:'userlogin',
+            component:UserLogin
+        },
+        {
+            path:'/effects',
+            name:'effects',
+            component:Effects,
+        },
+        {
+            path:'/home',
+            name:'home',
+            component:Home,
+        },
+        {
+            path:'/secord',
+            name:'secord',
+            component:Secord
+        }
+    ]
+});
+
+export default router;
+//index.js文件内容如上！
+```
+
+## 3.小试牛刀
+```js
+import Vue from 'vue';//在import Vue的过程中，Vue主要是在原型上完成方法的挂载，并且初始化了全局的API。
+import App from './App.vue';//引入主VUE页面
+import router from './router/index';
+
+import './styles/reset.css' /**引入样式重置 */
+
+Vue.config.productionTip = false;//阻止启动生产消息，常用作指令
 
 new Vue({
     el:"#root",//将渲染结果挂在这id为root的html上
+    router,
+    render:h=>h(App),//render函数是渲染一个视图，然后提供给el挂载，如果没有render那页面什么都不会出来
+});
+//index.js文件内容如上！
+```
+**在src文件夹下的index.js下引入路由配置文件，如上代码所示**
+
+**同时修改app.vue（根vue页面）的template标签**
+```js
+<template>
+    <div id="app">
+        <router-view />
+    </div>
+</template>
+```
+
+**运行项目你会发现通过对应路径已经有页面展示出来**
+
+![](https://user-gold-cdn.xitu.io/2019/3/11/1696ae2772ada277?w=719&h=510&f=png&s=37439)
+
+![](https://user-gold-cdn.xitu.io/2019/3/11/1696ae2c0513e0a8?w=939&h=510&f=png&s=42733)
+
+![](https://user-gold-cdn.xitu.io/2019/3/11/1696ae32e7d6c333?w=939&h=510&f=png&s=43998)
+
+## 4.rem实现手机端自适应
+&emsp;因为本文是基于手机端的小demo，所以需要实现手机端屏幕大小自适应！
+
+&emsp;**rem布局的本质是等比缩放，rem是根据根font-size的大小设置的**
+
+&emsp;在src文件夹下新建utils，用来存放**工具类函数等...**
+
+&emsp;在utils文件夹下新建**Rem.js**
+```js
+const baseSize=32;
+
+function setRem(){
+    const htmlWidth=document.documentElement.clientWidth || document.body.clientWidth;
+    const htmlDom=document.getElementsByTagName('html')[0];
+    //设置页面根节点字体大小
+    htmlDom.style.fontSize=htmlWidth/10+'px';
+}
+
+setRem();
+//Rem.js内容如上
+```
+然后在src文件夹的index.js文件中新增rem设置，即引入
+```js
+import './styles/reset.css' /**引入样式重置 */
+```
+因为暂时没有在less中发现和scss中类似的写法，故在scss定义一个px转化为rem的方法,在styles文件夹新建common.scss，需要时引入就行
+```js
+@function pxToRem($px){
+    @return $px/20px*1rem;
+}
+//common.scss内容如下
+```
+
+## 5.在项目中引入vuex
+&emsp;虽然咱们只有几个页面，完全没必要引入**vuex**，使项目看起来变得很复杂，但是这不是为了让大家熟悉**vuex**嘛，知道如何在项目中使用，首先在src选新建store文件夹，暂且定义三个文件,**global.js**存放与全局相关的状态，**home.js**存放home页面相关的状态,**secord.js**存放secord页面相关的状态。
+```js
+import Vue from 'vue';
+import Vuex from 'vuex';
+
+import home from './home';
+import secord from './secord';
+
+Vue.use(Vuex);
+
+export default new Vuex.Store({
+    namespaced:true,
+
+    modules:{
+        home,
+        secord
+    },
+
+    state:{
+        isAuthentication:false,//是否有权限，是否登陆
+    },
+    getters:{
+
+    },
+    actions:{
+
+    },
+    mutations:{
+        updateState(state,payload){
+            Object.assign(state,payload);
+        }
+    }
+});
+//global.js文件内容如上
+```
+```js
+export default {
+
+    namespaced:true,
+
+    state:{
+
+    },
+    getters:{
+
+    },
+    actions:{
+
+    },
+    mutations:{
+        updateState(state,paylaod){
+            Object.assign(state,payload);
+        }
+    }
+
+}
+//home.js内容如上
+```
+```js
+export default {
+
+    namespaced:true,
+
+    state:{
+
+    },
+    getters:{
+
+    },
+    actions:{
+
+    },
+    mutations:{
+        updateState(state,paylaod){
+            Object.assign(state,payload);
+        }
+    }
+
+}
+//secord.js内容如上
+```
+
+**文件写好后可以在index.js里面引入相关的文件使之初始化**
+```js
+import store from './store/global';
+
+new Vue({
+    el:"#root",//将渲染结果挂在这id为root的html上
+    router,
+    store,//加载vuex
     render:h=>h(App),//render函数是渲染一个视图，然后提供给el挂载，如果没有render那页面什么都不会出来
 });
 ```
-**解析vue template 标签要安装制定依赖**
-```js
-npm install vue-template-compiler --save-dev
-```
 
-### 4.在src目录下编写app.vue页面
+**vuex核心概念**
+
+**1.namespaced**：也就是标识符，指明在哪个模块之后，vuex中的store分模块管理，需要在store的index.js中引入各个模块，为了解决不同模块命名冲突的问题，将不同模块的namespaced:true，之后在不同页面中引入getter、actions、mutations时，需要加上所属的模块名。
+
+**2.modules**:Modules:将store分割成不同的模块。
+
+**3.state**:包含所有应用级别状态的对象。
+
+**4.getters**： vuex 中的getters 想当于vue中的computed  ，getters是vuex 中的计算属性 ，计算属性写起来是方法，但它是个属性。
+
+**5.actions**:包含异步操作、提交mutaions改变状态。
+
+**6.mutations**:唯一修改状态的事件的回调函数。
+
+**因为我们暂时没有进行业务模块的开发，所以暂时没有定义很多状态等...**
+
+## 6.登陆页面login.vue的布局样式编写
+&emsp;在阅读了[Vant](https://youzan.github.io/vant/#/zh-CN/quickstart)的官网后，我们需要现在public文件夹下的index.html文件的head标签内部引入vant样式！
+```js
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@1.6/lib/index.css">
+```
+&emsp;在项目中引入**babel-plugin-import**
+```js
+PS E:\MyProject\Webpack4OfVueStage> yarn add babel-plugin-import -D
+yarn add v1.7.0
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+info fsevents@1.2.7: The platform "win32" is incompatible with this module.
+info "fsevents@1.2.7" is an optional dependency and failed compatibility check. Excluding it from installation.
+[3/4] Linking dependencies...
+warning " > less-loader@4.1.0" has unmet peer dependency "less@^2.3.1 || ^3.0.0".
+[4/4] Building fresh packages...
+success Saved lockfile.
+success Saved 1 new dependency.
+info Direct dependencies
+└─ babel-plugin-import@1.11.0
+info All dependencies
+└─ babel-plugin-import@1.11.0
+Done in 7.72s.
+```
+**因为项目中使用的是babel7,所以新建babel.config.js**
+```js
+//在编译过程中将import的写法自动转换为按需引入的方式
+module.exports={
+    plugins:[
+        [
+            'import',{
+                libraryName:'vant',
+                libraryDirectory:'es',
+                style:true
+            },'vant'
+        ]
+    ]
+}
+```
+**在index.js文件里面引入所需的大部分组件**
+```js
+import {Dialog,Row,Col,Picker,Field,Cell,CellGroup,Button,Toast,NavBar,Tabbar,TabbarItem,List,Panel,NoticeBar,Tag,Popup} from 'vant';
+
+Vue.use(Row).use(Col);
+Vue.use(Field);
+Vue.use(Cell).use(CellGroup);
+Vue.use(Button);
+Vue.use(Toast);
+Vue.use(NavBar);
+Vue.use(Tabbar).use(TabbarItem);
+Vue.use(Panel);
+Vue.use(List);
+Vue.use(NoticeBar);
+Vue.use(Tag);
+Vue.use(CircleButton);
+Vue.use(Popup);
+Vue.use(Picker);
+Vue.use(Dialog);
+```
 ```js
 <template>
-    <div class="container"><span>{{msg}}</span></div>
+    <div class="change" >
+        <div style="width:100%;height:150px;"></div>
+        <div style="margin-top:20px">
+        <van-row type="flex" justify="center">
+            <van-col span="20">
+                <van-cell-group style="border-radius:10px;">
+                    <van-field 
+                        v-model="username"
+                        required 
+                        clearable
+                        label="用户名"
+                        icon="question"
+                        placeholder="请输入用户名"
+                        
+                    />
+
+                    <van-field 
+                        v-model="password"
+                        type="password"
+                        label="密码"
+                        placeholder="请输入密码"
+                        required 
+                        v-on:keyup.13="handleLogin"
+                    />    
+                </van-cell-group>
+            </van-col>
+        </van-row>
+        </div>
+        <div style="margin-top:180px">
+        <van-row type="flex" justify="center">
+            <van-col span="18">
+                <van-button type="primary" size="large" @click="handleLogin">确定</van-button>
+            </van-col>
+        </van-row>
+        </div>
+         
+    </div>
+</template>
+
+<script>
+    
+    import { mapState } from 'vuex';
+    export default{
+        data(){
+            return{
+                password:'',
+                username:'',
+            }
+        },
+        computed:{
+            ...mapState({
+                isAuthentication:state=>state.isAuthentication,
+            })
+        },
+        methods:{
+            handleLogin(){
+                if(!this.username || !this.password){
+                    this.$toast({
+                        message:'请将信息填写完整'
+                    });
+                }else{
+                    this.$store.dispatch('login',{
+                        password:this.password,
+                        username:this.username,
+                    });
+                    this.$router.push({name:'home'})
+                }   
+            }
+        },
+    }
+</script>
+
+<style lang="less" scoped>
+    @import "./../styles/color.less";
+    .change{
+        width:100%;
+        height:100%;
+        z-index:2;
+        position:absolute;
+        top:0;
+        bottom:0;
+    }
+    
+</style>
+//以上为login.vue的内容(只关注样式部分，逻辑部分可以暂时忽略)
+```
+**效果图如下(很丑，粗略设计)：**
+![](https://user-gold-cdn.xitu.io/2019/3/11/1696bd7e76238623?w=413&h=736&f=png&s=13899)
+
+&emsp;接下来我就通过**login.vue**文件带领大家领略vuex的用法
+```js
+<van-col span="18">
+    <van-button type="primary" size="large" @click="handleLogin">确定</van-button>
+</van-col>
+```
+&emsp;通过vue的**@click**绑定一个点击事件**handleLogin**,在**methods**里面定义一个方法**handleLogin**
+```js
+handleLogin(){
+                if(!this.username || !this.password){
+                    this.$toast({
+                        message:'请将信息填写完整'
+                    });
+                }else{
+                    this.$store.dispatch('login',{
+                        password:this.password,
+                        username:this.username,
+                    });
+                    this.$router.push({name:'home'})
+                }   
+}
+```
+&emsp;输入框输入账号密码,通过**v-model**指令将输入框的内容与**data**里面定义的**username**和**password**绑定,当账号为空或者密码为空时,调用**vant**的**toast**(弹出框:将信息填写完整),当账号密码都不为空时,通过**this.$store.dispatch**请求**login**方法,值得注意的是**dispatch**触发的是**vuex**模块的**actions(常用于异步操作)**,让我们看看**global**的**actions**中的**login**方法,**localStorage**是一种浏览器存储数据的方式。
+```js
+ async login({commit},payload){
+            if(payload.password && payload.username){
+                localStorage.setItem('token','AUTHENTION');
+                commit('updateState',{
+                    isAuthentication:true
+                })
+            }else{
+
+            }
+}
+```
+&emsp;当账号密码存在时,**commit**触发**updateState**方法,值得注意的是**commit**提交触发的是**mutations**方法:
+```js
+updateState(state,payload){
+            Object.assign(state,payload);
+}
+```
+&emsp;**Object.assign()方法用于将多个对象合并为一个对象**,上面的updateState方法可以将isAuthentication设置为true。
+```js
+import Vue from 'vue';
+import Vuex from 'vuex';
+
+import home from './home';
+import secord from './secord';
+
+Vue.use(Vuex);
+
+export default new Vuex.Store({
+    namespaced:true,
+
+    modules:{
+        home,
+        secord
+    },
+
+    state:{
+        isAuthentication:false,
+    },
+    getters:{
+
+    },
+    actions:{
+        async login({commit},payload){
+            if(payload.password && payload.username){
+                localStorage.setItem('token','AUTHENTION');
+                commit('updateState',{
+                    isAuthentication:true
+                })
+            }else{
+
+            }
+        }
+    },
+    mutations:{
+        updateState(state,payload){
+            Object.assign(state,payload);
+        }
+    }
+});
+//global.js完整代码
+```
+
+## 7.home页面(换肤)的编写
+&emsp;由上面的**login.vue**所写,当填写账号密码后：
+```js
+this.$router.push({name:'home'})
+```
+&emsp;这是vue-router的方法,目的是**跳转到home页面**,此时url为**home**。
+
+&emsp;话不多说,先把代码展示出来,再展示逻辑部分。
+```js
+<template>
+    <div class="home">
+        <van-nav-bar
+            title="测试换肤功能"
+            left-text="返回"
+            left-arrow
+            right-text="换肤"
+            class="change"
+            @click-right="changeSkin"
+        ></van-nav-bar>
+
+        <van-card
+            num="2"
+            price="2.00"
+            desc="描述信息"  
+            title="商品标题"
+            :thumb="imageUrl"
+        />
+        <van-card
+            num="2"
+            price="2.00"
+            desc="描述信息"  
+            title="商品标题"
+            :thumb="imageUrl"
+        />
+        <van-card
+            num="2"
+            price="2.00"
+            desc="描述信息"  
+            title="商品标题"
+            :thumb="imageUrl"
+        />
+        <van-card
+            num="2"
+            price="2.00"
+            desc="描述信息"  
+            title="商品标题"
+            :thumb="imageUrl"
+        />
+        <van-card
+            num="2"
+            price="2.00"
+            desc="描述信息"  
+            title="商品标题"
+            :thumb="imageUrl"
+        />
+
+        <van-popup v-model="formVisible" position="bottom">
+            <van-picker 
+                show-toolbar
+                title="请选择皮肤"
+                @cancel="handleCancelSelect"
+                @confirm="handleSubmitSelect"
+                :columns="columns"  
+            />
+        </van-popup>
+
+        <common-tabbar 
+            :activeIndex="activeIndex"
+            v-on:onChange="handleChangeTabBar" 
+        />
+    </div>
+</template>
+
+<script>
+
+import CommonTabbar from './../components/common/Tabbar.vue';
+import SkinTypeEnum from './../enum/SkinTypeEnum';
+import { mapState } from 'vuex';
+
+export default{
+    data(){
+        return{
+            show:true,
+            activeIndex:0,
+            imageUrl:'http://img5.mtime.cn/CMS/News/2019/03/11/091140.35777532_620X620.jpg',
+            columns: [`少女粉`,
+                    `天空蓝`, 
+                    `茄子紫`, 
+                    `清新绿`,
+                    `警告色`,
+                    `危险红`
+            ]
+        }
+    },
+    components:{
+        CommonTabbar
+    },
+    computed:mapState({
+        formVisible:state=>state.home.formVisible,
+    }),
+    methods:{
+        handleChangeTabBar(e){
+            console.log(e);
+            if(e===2){
+                this.$router.push({name:'secord'})
+            }else if(e===1){
+                this.$router.push({name:'effects'})
+            }
+        },
+        changeSkin(){//点击换肤弹出皮肤选择框
+            this.$store.commit('home/updateState',{
+                formVisible:true
+            })
+        },
+        handleCancelSelect(){//点击取消
+            this.$store.commit('home/updateState',{
+                formVisible:false,
+            })
+        },
+        handleSubmitSelect(value,index){//点击确定
+            let colorValue=SkinTypeEnum.getThemeValue(value);
+            document.getElementById('app').className=`${colorValue}Theme`;
+            this.$store.commit('home/updateState',{
+                formVisible:false,
+            });
+            localStorage.setItem('app_theme',document.getElementById('app').className)
+        }
+    }
+}
+</script>
+
+<style scoped lang="less">
+@import "./../styles/color.less";
+.change{
+     /deep/.van-icon .van-icon-arrow-left .van-nav-bar__arrow{
+         color:white;
+     }
+     /deep/.van-nav-bar__text{
+         color:white;
+     }
+     /deep/.van-nav-bar__title{
+         color:white;
+     }
+}
+</style>
+//home.vue的内容
+```
+&emsp;**其中我们自定义了一个组件tabbar，因为组件中每个页面都用到了这个组件,所以我们把它抽象成一个组件,这样我们就不需要重复写代码了,每个页面直接引用就可以了,当然页面也不是很多,我们完全可以每个页面都写一个，但是这不是为了让大家都了解组件的用法嘛！！！**
+
+&emsp;新建**components**文件夹,在components文件夹下新建**common**文件夹,在**common**文件夹下新建**Tabbar.vue**文件。
+```js
+<template>
+    <van-tabbar v-model="activeIndexData" class="change" @change="handleChangeTabBar">
+        <van-tabbar-item>
+                <span>换肤</span>
+                <i slot="icon" class="iconfont iconhuanfu" style="{fontSize:'20px',color:'white'}"></i>
+        </van-tabbar-item>
+        <van-tabbar-item>
+                <span>动效</span>
+                <i slot="icon" class="iconfont iconxiaoguo" style="{fontSize:'20px'}"></i>
+        </van-tabbar-item>
+        <van-tabbar-item>
+                <span>切换</span>
+                <i slot="icon" class="iconfont iconqiehuan" style="{fontSize:'20px'}"></i>
+        </van-tabbar-item>
+    </van-tabbar>
+</template>
+
+<script>
+export default{
+    data(){
+        let me=this;
+        return{
+            activeIndexData:me.activeIndex,
+        }
+    },
+    methods:{
+        handleChangeTabBar(e){
+            this.$emit('onChange',e)
+        }
+    },
+    props:{
+        activeIndex:{
+            type:Number,
+            default:0,
+        },
+    },
+}
+</script>
+
+<style lang="less">
+@import "./../../styles/color.less";
+.change{
+    /deep/.van-tabbar-item{
+        color:white;
+    }
+    /deep/.van-tabbar-item--active{
+        color:#1989fa;
+    }
+}
+
+</style>
+//tabbar.vue的内容
+```
+&emsp;其中**props**定义的是父组件传来的值,类型是**number**，默认值是0。
+
+&emsp;**引入组件并注册组件**
+
+```js
+ components:{
+        CommonTabbar
+},
+```
+
+&emsp;**computed**中可以获取vuex **home**模块定义的state
+```js
+computed:mapState({
+        formVisible:state=>state.home.formVisible,
+}),
+```
+&emsp;当点击换肤的时候,触发**changeSkin**方法：
+```js
+changeSkin(){//点击换肤弹出皮肤选择框
+            this.$store.commit('home/updateState',{
+                formVisible:true
+            })
+},
+```
+&emsp;触发**commit**,即**home**模块里面的**mutations**里面的**updateState**方法,使**formVisible设置为true**,formVisible与**v-model**绑定,通过**true/false**来控制**popup显示/隐藏。**
+
+&emsp;点击换肤让popup弹窗**显示**出来，popup里面有picker的column绑定了columns,即各种皮肤颜色。
+
+```js
+<van-popup v-model="formVisible" position="bottom">
+            <van-picker 
+                show-toolbar
+                title="请选择皮肤"
+                @cancel="handleCancelSelect"
+                @confirm="handleSubmitSelect"
+                :columns="columns"  
+            />
+</van-popup>
+```
+
+&emsp;当点击取消时设置**formVisible**为false时,弹框即消失。
+
+&emsp;当点击确定选择颜色时,触发**handleSubmitSelect**方法,此时我再此介绍一个枚举类形式的函数,此函数的目的是通过一个英文值含义或者中文值含义来返回对应的值。
+```js
+function getThemeValue(value){
+
+    console.log('a');
+
+    if(!value){
+        return '';
+    }
+
+    if(value === "少女粉"){
+        return 'girl';
+    }
+
+    if(value === "天空蓝"){
+        return 'blue';
+    }
+
+    if(value === "茄子紫"){
+        return 'purple';
+    }
+
+    if(value === '清新绿'){
+        return 'green';
+    }
+
+    if(value === '警告色'){
+        return 'warning';
+    }
+
+    if(value === '危险红'){
+        return 'danger';
+    }
+
+}
+
+export default {
+    getThemeValue,
+}
+//SkinTypeEnum.js定义
+```
+&emsp;直接引入调用,把中文值转化为对应的英文。
+```js
+handleSubmitSelect(value,index){//点击确定
+            let colorValue=SkinTypeEnum.getThemeValue(value);
+            document.getElementById('app').className=`${colorValue}Theme`;
+            this.$store.commit('home/updateState',{
+                formVisible:false,
+            });
+            localStorage.setItem('app_theme',document.getElementById('app').className)
+}
+//改变肤色的重要方法
+```
+**接下来就是整个功能的重中之重了！！请祥听**
+
+## 8.编写less文件实现换肤
+
+### 1.在styles文件夹下新建theme.less
+```js
+.theme(@background){
+    .change{
+        background-color:@background;
+    }
+}
+//theme.less内容
+```
+
+### 2.在styles文件夹下新建color.less
+```js
+@import "./theme.less";
+
+@girlPink:#FC9F9F;//少女粉
+@skyBlue:#1890FF;//天空蓝
+@eggplantPurple:purple;//茄子紫
+@freshGreen:#09C160;//清新绿
+@warningColor:#FF976A;
+@dangerRed:#FF4D4F;//危险红
+
+
+.girlTheme{
+    .theme(@girlPink);
+}
+.blueTheme{
+    .theme(@skyBlue);
+}
+.purpleTheme{
+    .theme(@eggplantPurple);
+}
+.greenTheme{
+    .theme(@freshGreen);
+}
+.warningTheme{
+    .theme(@warningColor);
+}
+.dangerTheme{
+    .theme(@dangerRed);
+}
+//color.less内容
+```
+
+**熟悉Less的小伙伴们应该看到以后就大致明白了,通过color.less引入theme.less,可以使change类名下的背景颜色改为相对应类目不一样的颜色**
+
+### 3.在需要改变肤色的页面引入color.less，并将需要修改的div类目设置为change
+&emsp;因为我们的项目是单页(SPA)应用,所有的vue页面都是在根div下，所以**设置根目录下的class类名就可以改变vue页面class类名**为**change**的div背景色。所以我们把**想要更换div背景色套上change类名**就行了！其实我们之前写的页面都已经套上change了哦！不知道大家有没有发现！
+
+### 4.持久化改变肤色
+&emsp;其实这里还是有一个Bug的,就是每当重启服务浏览器的时候，所有的类名初始化,之前的颜色将会消失,所以我们这里将皮肤主题保存进localStorage(如果不手动清楚浏览器缓存，它就始终不会消失!)
+```js
+localStorage.setItem('app_theme',document.getElementById('app').className)
+```
+**在根vue app.vue里面的生命周期函数中设置存下来的肤色，一切万事OK!**
+```js
+<template>
+    <div id="app">
+ 
+        <router-view />
+   
+    </div>
 </template>
 
 <script>
@@ -701,244 +1013,22 @@ export default {
         return{
             msg:'webpack4搭建react环境基本完成，是不是很简单呢'
         }
+    },
+    mounted:function(){
+        let theme=localStorage.getItem('app_theme');
+        document.getElementById('app').className=theme;
     }
 }
 </script>
-
-<style>
-.container{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:20px;
-    color:red;
-    box-shadow:5px 5px 5px 5px;
-}
-</style>
 ```
+**大致效果就如下图所示,下一个需求是动态更改div位置,希望大家可以期待哦！**
 
-### 5.编写样式文件reset.css
+![](https://user-gold-cdn.xitu.io/2019/3/13/1697595d987ae2e5?w=413&h=732&f=gif&s=1422316)
 
-```js
-/* 
-  * reset 的目的不是让默认样式在所有浏览器下一致，而是减少默认样式有可能带来的问题。
-  * The purpose of reset is not to allow default styles to be consistent across all browsers, but to reduce the potential problems of default styles.
-  * create by jsliang
-*/
-
-/** 清除内外边距 - clearance of inner and outer margins **/
-body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, /* 结构元素 - structural elements */
-dl, dt, dd, ul, ol, li, /* 列表元素 - list elements */
-pre, /* 文本格式元素 - text formatting elements */
-form, fieldset, legend, button, input, textarea, /* 表单元素 - from elements */
-th, td /* 表格元素 - table elements */ {
-  margin: 0;
-  padding: 0;
-}
-
-/*默认初始化样式*/
-body{
-  margin:0;padding:0;font-size:"微软雅黑";box-sizing: border-box;
-}
-
-body,html{
-  text-size-adjust: none;/*文本不会随着设备尺寸的变化而变化*/
-  width:100%;
-  height:100%;
-}
-
-*{text-decoration: none;list-style:none;}
-
-img{border:0px;}
-
-/** 设置默认字体 - setting the default font **/
-body, button, input, select, textarea {
-  font: 18px/1.5 '黑体', Helvetica, sans-serif;
-}
-h1, h2, h3, h4, h5, h6, button, input, select, textarea { font-size: 100%; }
-
-/** 重置列表元素 - reset the list element **/
-ul, ol { list-style: none; }
-
-/** 重置文本格式元素 - reset the text format element **/
-a, a:hover { text-decoration: none; }
-
-/** 重置表单元素 - reset the form element **/
-button { cursor: pointer; }
-input { font-size: 18px; outline: none; }
-
-/** 重置表格元素 - reset the table element **/
-table { border-collapse: collapse; border-spacing: 0; }
-
-/** 图片自适应 - image responsize **/
-img { border: 0; display: inline-block; width: 100%; max-width: 100%; height: auto; vertical-align: middle; }
-
-/* 
-    * 默认box-sizing是content-box，该属性导致padding会撑大div，使用border-box可以解决该问题
-    * set border-box for box-sizing when you use div, it solve the problem when you add padding and don't want to make the div width bigger
-*/
-div, input { box-sizing: border-box; }
-
-/** 清除浮动 - clear float **/
-.jsbao-clear:after, .clear:after {
-  content: '\20';
-  display: block;
-  height: 0;
-  clear: both;
-}
-.jsbao-clear, .clear {
-  *zoom: 1;
-}
-
-/** 设置input的placeholder - set input placeholder **/
-input::-webkit-input-placeholder { color: #919191; font-size: .26rem } /* Webkit browsers */
-input::-moz-placeholder { color: #919191; font-size: .26rem } /* Mozilla Firefox */
-input::-ms-input-placeholder { color: #919191; font-size: .26rem } /* Internet Explorer */
-```
-
-### 6.配置package.json文件
-```js
-npm install cross-env --save-dev
-//解决webpack命令设置node_env=development无反应等 可跨平台使用
-```
-**在package.json中的scripts标签中写入**
-
-```js
-"scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env webpack-dev-server --config build/webpack.dev.conf.js",
-    "build": "cross-env webpack --config build/webpack.prod.conf.js"
- },
-```
-
-### 7.关于babel
-&emsp;**大家都知道babel在编程中的重要性,当然搭建Vue环境也是不可缺少的,让我们看看常用的babel都有哪些呢(新版本已出,本文全线升级成babel 7.x以上)**
-#### @babel/core:@babel/core的作用是把 js 代码分析成 ast ，方便各个插件分析语法进行相应的处理。
-```js
-npm install @babel/core@7.1.2 --save-dev
-```
-### @babel/plugin-proposal-class-properties的作用是把es6的类转化为浏览器可读的
-```js
-npm install @babel/plugin-proposal-class-properties@7.1.0 --save-dev
-```
-### @babel/plugin-proposal-decorators的作用是把装饰器转为为未浏览器可读的
-```js
-npm install @babel/plugin-proposal-decorators@7.1.6 --save-dev
-```
-### @babel/plugin-proposal-function-bind的作用是把：：作用于绑定符转化未浏览器可读的
-```js
-npm install @babel/plugin-proposal-function-bind@7.0.0 --save-dev
-```
-
-### @babel/plugin-syntax-dynamic-import的作用是支持promise和数组的迭代相关的方法
-```js
-npm install @babel/plugin-syntax-dynamic-import@7.0.0 --save-dev
-```
-### @babel/plugin-transform-runtime的作用会自动polyfill es5不支持的特性
-```js
-npm install @babel/plugin-transform-runtime@7.1.0 --save-dev
-```
-### @babel/polyfill:这个库将会模拟一个完全的 ES2015+ 的环境。这意味着你可以使用 新的内置语法 比如 promise 或者 WeakMap， 静态方法比如Array.from 或 Object.assign, 实例方法 比如 Array.prototype.includes 和 generator 函数。
-```js
-npm install @babel/polyfill@7.2.5 --save-dev
-```
-### @babel/preset-env是一个智能预设，允许您使用最新的JavaScript，
-```js
-npm install @babel/preset-env@7.1.6 --save-dev
-```
-### @babel/preset-react:转化react中jsx的写法
-```js
-npm install @babel/preset-react@7.0.0 --save-dev
-```
-### @babel/preset-stage-0:同env
-```js
-npm install @babel/preset-stage-0@7.0.0 --save-dev
-```
-### @babel/runtime:同@babel/polyfill
-```js
-npm install @babel/runtime@7.2.0 --save-dev
-```
-**安装了这些babel以后，需要有个文件进行标识，src目录下新建.babelrc**
-```js
-{
-    "presets":[
-        ["@babel/preset-env", {
-            "modules": false,
-            "targets": {
-              "browsers": ["> 1%", "last 2 versions", "ie >= 10"]
-            },
-            "useBuiltIns": "usage"
-        }],
-        "@babel/preset-react"
-    ],
-    "plugins":[
-        ["@babel/plugin-proposal-decorators", { "legacy": true }],
-        ["@babel/plugin-proposal-class-properties",{"loose":true}],
-        "@babel/plugin-transform-runtime",
-        "@babel/plugin-proposal-function-bind",
-        "@babel/plugin-syntax-dynamic-import"
-    ]
-}
-```
+&emsp;**如果你觉得我的文章还不错的话，可以给个star哦~，[GitHub地址](https://github.com/WJB3/CompanyNeedOfVueDemo)**
 
 
-### 8.关于外部postcss.config.js的设置
-**因为你在loader 中引用了插件，但是没有指明是谁的插件，需要制定一个ident，唯一标识。**
-<br/>
-**src目录下新建postcss.config.js文件**
-```js
-//自动添加css兼容属性
-module.exports = {
-    plugins: [
-        require('autoprefixer')({
-            "browsers": [
-                "defaults",
-                "not ie < 11",
-                "last 2 versions",
-                "> 1%",
-                "iOS 7",
-                "last 10 versions"
-            ]
-        })
-    ]
-};
-```
-```js
-npm install autoprefixer --save-dev
-//，就是自动补全css前缀的东西
-```
 
-# 六、项目运行
-**是不是和我一样看的很累呢，第一次写文章很多地方没有特别注意，希望下次可以越来越好吧**
-**扯了那么多，不看效果等于耍流氓！！！
-**命令行执行npm run start/npm start**
-**浏览器会自动弹出，建议你用谷歌(手动滑稽)**
-<br />
-**效果图：**
 
-![](https://user-gold-cdn.xitu.io/2019/3/6/16952c0185d07d2a?w=1817&h=876&f=png&s=314724)
 
-**还是特别的丑 只有一行字 且垂直居中 不过咱们主要目的不是为了搭建webpack嘛！！！觉得此篇文章对你有用的画不要忘了给我的git一个赞哦！！！**
 
-# 七、webpack运行原理
-&emsp;**Webpack的运行流程是一个串行的过程，从开始到结束后回依次执行以下流程：**
-### 流程概括:
-+ **1.初始化参数：从配置文件和shell语句中读取与合并参数，得出最终的参数**
-+ **2.开始编译：用上一步得到的参数初始化 Compiler 对象，加载所有配置的插件，执行对象的 run 方法开始执行编译；**
-+ **3.确定入口：根据配置中的 entry 找出所有的入口文件；**
-+ **4.编译模块：从入口文件出发，调用所有配置的 Loader 对模块进行翻译，再找出该模块依赖的模块，再递归本步骤直到所有入口依赖的文件都经过了本步骤的处理；**
-+ **5.完成模块编译：在经过第4步使用 Loader 翻译完所有模块后，得到了每个模块被翻译后的最终内容以及它们之间的依赖关系；**
-+ **6.输出资源：根据入口和模块之间的依赖关系，组装成一个个包含多个模块的 Chunk，再把每个 Chunk 转换成一个单独的文件加入到输出列表，这步是可以修改输出内容的最后机会；**
-+ **7.输出完成：在确定好输出内容后，根据配置确定输出的路径和文件名，把文件内容写入到文件系统。**
-
-### 流程细节:
-**Webpack 的构建流程可以分为以下三大阶段：**
-+ **初始化：启动构建，读取与合并配置参数，加载 Plugin，实例化 Compiler。**
-+ **编译：从 Entry 发出，针对每个 Module 串行调用对应的 Loader 去翻译文件内容，再找到该 Module 依赖的 Module，递归地进行编译处理。**
-+ **输出：对编译后的 Module 组合成 Chunk，把 Chunk 转换成文件，输出到文件系统。**
-
-**如果只执行一次构建，以上阶段将会按照顺序各执行一次。但在开启监听模式下，流程将变为如下：**
-
-**如果你觉得我的文章还不错的话，可以给个star哦~，[GitHub地址](https://github.com/WJB3/Webpack4OfVueStage)**
-
-**下一步计划是用<font color=skyblue>Vue-router+Vuex+Vant</font>写一个简易demo**
